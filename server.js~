@@ -50,15 +50,13 @@ server.register([
 server.route({
 	method:'POST',
 	path:'/login',
-	config:{
-		tags:['api'],
-		description:'Login Check',
-		notes:'Login Check',
-		validate:{
-			payload:{
-				email:Joi.string().required(),
-				password:Joi.string().required()
-			}
+	tags:['api'],
+	description:'Login Check',
+	notes:'Login Check',
+	validate:{
+		payload:{
+			email:Joi.string().required(),
+			password:Joi.string().required()
 		}
 	},
 	handler:function(request,reply)
@@ -102,7 +100,7 @@ server.route({
 });
 //middleware route that will track all requests
 server.ext('onRequest',function(req,reply){
-	//console.log('checking for authetication');
+	console.log('checking for authetication');
 	//console.log(request.path,request.query);
 	
 	let token = (req.body && req.body.token) || (req.query && req.query.token) || (req.headers['x-access-token']);
@@ -127,10 +125,7 @@ server.ext('onRequest',function(req,reply){
 	}
 	else
 	{
-		reply({
-			statuscode:503,
-			message:"no token"
-		});
+		return reply.continue();
 	}
 });
 

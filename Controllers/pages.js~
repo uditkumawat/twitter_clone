@@ -30,6 +30,56 @@ exports.index = {
 	}
 };
 
+exports.login = {
+	tags:['api'],
+	description:'Login Check',
+	notes:'Login Check',
+	validate:{
+		payload:{
+			email:Joi.string().required(),
+			password:Joi.string().required()
+		}
+	},
+	handler:function(request,reply)
+	{
+		User.findOne({email:request.payload.email},function(err,user){
+			
+			if(err)
+				throw err;
+			if(!user)
+			{
+				reply({
+					statuscode:200,
+					message:'User not found'
+				});
+			}
+			else
+			{
+				user.comparePassword(request.payload.password,function(err,isMatch){
+					
+					if(err)
+						throw err;
+					else
+					{
+						
+						let token = jwt.sign(user,"uditkumawat",{
+							expiresIn:1440 //24 hours
+						});
+						request.token=token;
+					
+						reply({
+							statusCode:200,
+							message:'Result',
+							res:isMatch,
+							token:token
+						})
+					}
+				});
+			}
+		});
+					
+	}
+};
 
 exports.register = {
 	tags:['api'],
