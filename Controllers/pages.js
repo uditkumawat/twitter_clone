@@ -68,6 +68,8 @@ exports.register = {
 	notes:'Register Check',
 	validate:{
 		payload:{
+			name:Joi.string().required(),
+			username:Joi.string().required(),
 			email:Joi.string().required(),
 			password:Joi.string().required()
 		}
@@ -76,7 +78,9 @@ exports.register = {
 	{
 		let user = new User({
 			email:request.payload.email,
-			password:request.payload.password
+			password:request.payload.password,
+			name:request.payload.name,
+			username:request.payload.username
 		});
 	
 		user.save(user,(err)=>{
